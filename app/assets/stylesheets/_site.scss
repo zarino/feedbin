@@ -11,7 +11,7 @@ $base-button-position: 10px;
 /*-- Colors --*/
 $body-background-color: #FFFFFF;
 $body-background-color-sunset: #efeee4;
-$body-background-color-night: #353739;
+$body-background-color-night: #000;
 
 $list-background-color: #eff1f3;
 $list-background-color-sunset: #e5e4db;
@@ -3325,7 +3325,7 @@ $saved-search-control-height: 48px;
 }
 
 .application-messages {
-    $height: 35px;
+    $height: 0;
     position: fixed;
     z-index: 10000;
     width: 100%;
