@@ -539,10 +539,9 @@ $.extend feedbin,
 
     clearTimeout(feedbin.openEntryBasementTimeount)
     $('.entry-basement').removeClass('foreground')
-    top = $('.entry-toolbar').outerHeight()
     $('.entry-basement').removeClass('open')
     $('.entry-content').css
-      "top": "41px"
+      "bottom": "41px"
 
   openEntryBasement: (selectedPanel) ->
     feedbin.openEntryBasementTimeount = setTimeout ( ->
@@ -559,7 +558,7 @@ $.extend feedbin,
     $('.entry-basement').addClass('open')
     newTop = selectedPanel.height() + 41
     $('.entry-content').css
-      "top": "#{newTop}px"
+      "bottom": "#{newTop}px"
 
   applyStarred: (entryId) ->
     if feedbin.Counts.get().isStarred(entryId)

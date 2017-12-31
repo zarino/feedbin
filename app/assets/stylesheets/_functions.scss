@@ -29,21 +29,26 @@
 	}
 }
 
-@mixin arrow($x-position, $y-position, $arrow-color, $arrow-color-night, $arrow-color-sunset, $shadow-color, $shadow-color-night, $shadow-color-sunset, $origin:left, $invert:false) {
+@mixin arrow($x-position, $y-position, $arrow-color, $arrow-color-night, $arrow-color-sunset, $shadow-color, $shadow-color-night, $shadow-color-sunset, $origin:left, $invert:false, $y-origin:top) {
 	&:before {
-		@if $origin == left {
-			left: $x-position;
-		}
-		@else {
-			right: $x-position;
-		}
+        @if $y-origin == bottom {
+            bottom: $y-position;
+        }
+        @else {
+            top: $y-position;
+        }
+        @if $origin == left {
+            left: $x-position;
+        }
+        @else {
+            right: $x-position;
+        }
 		@if $invert == true {
 			border-bottom: 6px solid $shadow-color;
 		}
 		@else {
 			border-top: 6px solid $shadow-color;
 		}
-		top: $y-position;
 		position: absolute;
 		border-right: 6px solid rgba(0, 0, 0, 0);
 		border-left: 6px solid rgba(0, 0, 0, 0);
@@ -75,11 +80,21 @@
 		}
 		@if $invert == true {
 			border-bottom: 5px solid $arrow-color;
-			top: $y-position + 2;
+            @if $y-origin == bottom {
+                bottom: $y-position - 1;
+            }
+            @else {
+                top: $y-position + 2;
+            }
 		}
 		@else {
 			border-top: 5px solid $arrow-color;
-			top: $y-position;
+            @if $y-origin == bottom {
+    			bottom: $y-position;
+            }
+            @else {
+    			top: $y-position;
+            }
 		}
 		position: absolute;
 		border-right: 5px solid rgba(0, 0, 0, 0);
