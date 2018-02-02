@@ -507,6 +507,53 @@ ALTER SEQUENCE in_app_purchases_id_seq OWNED BY in_app_purchases.id;
 
 
 --
+-- Name: new_entries; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE new_entries (
+    id bigint NOT NULL,
+    feed_id integer NOT NULL,
+    thread_id bigint,
+    title text,
+    url text,
+    author text,
+    entry_id text,
+    summary text NOT NULL,
+    public_id character varying(255) NOT NULL,
+    data json,
+    original json,
+    image json,
+    source text,
+    content text,
+    recently_played_entries_count integer DEFAULT 0 NOT NULL,
+    starred_entries_count integer DEFAULT 0 NOT NULL,
+    updated timestamp without time zone,
+    published timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: new_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE new_entries_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: new_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE new_entries_id_seq OWNED BY new_entries.id;
+
+
+--
 -- Name: plans; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1099,6 +1146,13 @@ ALTER TABLE ONLY in_app_purchases ALTER COLUMN id SET DEFAULT nextval('in_app_pu
 
 
 --
+-- Name: new_entries id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY new_entries ALTER COLUMN id SET DEFAULT nextval('new_entries_id_seq'::regclass);
+
+
+--
 -- Name: plans id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1298,6 +1352,14 @@ ALTER TABLE ONLY imports
 
 ALTER TABLE ONLY in_app_purchases
     ADD CONSTRAINT in_app_purchases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: new_entries new_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY new_entries
+    ADD CONSTRAINT new_entries_pkey PRIMARY KEY (id);
 
 
 --
@@ -1564,6 +1626,27 @@ CREATE UNIQUE INDEX index_in_app_purchases_on_transaction_id ON in_app_purchases
 --
 
 CREATE INDEX index_in_app_purchases_on_user_id ON in_app_purchases USING btree (user_id);
+
+
+--
+-- Name: index_new_entries_on_feed_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_new_entries_on_feed_id ON new_entries USING btree (feed_id);
+
+
+--
+-- Name: index_new_entries_on_public_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_new_entries_on_public_id ON new_entries USING btree (public_id);
+
+
+--
+-- Name: index_new_entries_on_thread_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_new_entries_on_thread_id ON new_entries USING btree (thread_id) WHERE (thread_id IS NOT NULL);
 
 
 --
@@ -2070,6 +2153,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20170812121620'),
 ('20170816220409'),
 ('20180102071024'),
-('20180106031725');
+('20180106031725'),
+('20180202010104');
 
 

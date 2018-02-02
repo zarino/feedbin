@@ -1,5 +1,5 @@
 module BatchJobs
-  BATCH_SIZE = 5_000
+  BATCH_SIZE = 3
 
   def job_args(ending_id, starting_id = 1, *args)
     start_batch = (starting_id.to_f/BATCH_SIZE.to_f).floor
