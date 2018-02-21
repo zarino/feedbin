@@ -662,6 +662,11 @@ table {
         background-size: 25px 25px;
         @include share-icon(0, 0);
     }
+    .icon-share-micropub {
+        background-image: image-url("icon-share-micropub.svg");
+        background-size: 21px 19px;
+        @include share-icon(1, 2);
+    }
     .icon-share-custom {
         background-image: image-url("icon-share-custom.svg");
         background-size: 21px 21px;

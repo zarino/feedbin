@@ -104,6 +104,15 @@ class SupportedSharingService < ApplicationRecord
       html_options: {data: {behavior: 'show_entry_basement', basement_panel: 'micro_blog_share_panel'}},
       klass: 'Share::MicroBlog',
       has_share_sheet: true
+    },
+    {
+      service_id: 'micropub',
+      label: 'Micropub',
+      requires_auth: true,
+      service_type: 'micropub',
+      html_options: {data: {behavior: 'show_entry_basement', basement_panel: 'micro_blog_share_panel'}},
+      klass: 'Share::Micropub',
+      has_share_sheet: true
     }
   ].freeze
 
