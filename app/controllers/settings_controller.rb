@@ -22,7 +22,27 @@ class SettingsController < ApplicationController
 
   def feeds
     @user = current_user
-    @subscriptions = @user.subscriptions.select('subscriptions.*, feeds.title AS original_title, feeds.last_published_entry AS last_published_entry, feeds.feed_url, feeds.site_url, feeds.host').joins("INNER JOIN feeds ON subscriptions.feed_id = feeds.id AND subscriptions.user_id = #{@user.id}").includes(feed: [:favicon])
+    @subscriptions = @user.
+      subscriptions.
+      select('subscriptions.*, feeds.title AS original_title, feeds.last_published_entry AS last_published_entry, feeds.feed_url, feeds.site_url, feeds.host').
+      joins("INNER JOIN feeds ON subscriptions.feed_id = feeds.id AND subscriptions.user_id = #{@user.id}").
+      includes(feed: [:favicon]).
+      order(title: :desc).
+      limit(1)
+
+      # <li class="feeds-wrap <%= subscription_presenter.mute_class %>" data-sort-name="<%= subscription.title.downcase %><%= subscription.site_url %><%= subscription.feed_url %><%= tag_names %><%= subscription_presenter.muted_status %>" data-sort-last-updated="<%= subscription.try(:last_published_entry).try(:to_time).try(:to_i) %>" data-sort-post-volume="<%= subscription.post_volume %>" data-sort-tags="<%= tag_names %>">
+
+    if params[:q]
+      search_fields = %w[
+        subscriptions.title
+        feeds.site_url
+        feeds.feed_url
+      ]
+      where = search_fields.map { |field| field.concat(" ILIKE :query") }.join(" OR ")
+
+      @subscriptions = @subscriptions.where(where, query: "%#{params[:q]}%")
+    end
+
     @tags = @user.tags_on_feed
     start_date = 29.days.ago
     feed_ids = @subscriptions.map {|subscription| subscription.feed_id}
