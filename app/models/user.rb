@@ -62,6 +62,7 @@ class User < ApplicationRecord
   has_many :updated_entries, dependent: :delete_all
   has_many :devices, dependent: :delete_all
   has_many :in_app_purchases
+  has_many :retired_subscriptions, dependent: :delete_all
   belongs_to :plan
 
   accepts_nested_attributes_for :sharing_services,

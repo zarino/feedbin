@@ -17,13 +17,16 @@ class NewslettersController < ApplicationController
     if user = User.where(newsletter_token: newsletter.token).take
       entry = build_entry(newsletter)
       feed = get_feed(newsletter)
+      feed.save
 
       if should_subscribe?(feed)
-        feed.save
         user.subscriptions.find_or_create_by(feed: feed)
+      else
+        user.retired_subscriptions.find_or_create_by(feed: feed)
       end
 
-      if feed.persisted?
+
+      if user.active?
         feed.entries.create!(entry)
         options = {
           "email_headers" => newsletter.headers,

@@ -10,6 +10,9 @@ class Subscription < ApplicationRecord
   before_create :expire_stat_cache
   before_destroy :expire_stat_cache
 
+  before_destroy :create_retired_subscription
+  before_create :destroy_retired_subscription
+
   after_create :add_feed_to_action
   after_commit :remove_feed_from_action, on: [:destroy]
 
@@ -71,6 +74,14 @@ class Subscription < ApplicationRecord
 
   def refresh_favicon
     FaviconFetcher.perform_async(self.feed.host)
+  end
+
+  def create_retired_subscription
+    self.user.retired_subscriptions.create!(feed: self.feed) if self.feed.newsletter?
+  end
+
+  def destroy_retired_subscription
+    self.user.retired_subscriptions.where(feed: self.feed).destroy!
   end
 
 end
