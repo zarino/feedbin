@@ -11,96 +11,158 @@ class Transformers
       node_name = env[:node_name]
       source    = node['src']
 
+      begin
+        parsed_source = URI(source)
+      rescue
+        return
+      end
+
       if node_name != 'iframe' || env[:is_whitelisted] || !node.element? || source.nil?
         return
       end
 
-      allowed_hosts = [
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:www\.)?
-          (?:youtube\.com|youtu\.be|youtube-nocookie\.com)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:www\.|player\.)?
-          (?:vimeo\.com)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:www\.)?
-          (?:kickstarter\.com)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:embed\.spotify\.com)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:w\.soundcloud\.com)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:view\.vzaar\.com)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:vine\.co)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:e\.)?
-          (?:infogr\.am)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:www\.flickr\.com)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:mpora\.com)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:embed-ssl\.ted\.com)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:embed\.itunes\.apple\.com)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:www\.tumblr\.com)
-        /x,
-        /^
-          (?:https?:\/\/|\/\/)
-          (?:cdn\.embedly\.com)
-        /x
+      known_hosts = [
+        {
+          title: "YouTube",
+          host: "youtube.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:www\.)?
+                        (?:youtube\.com|youtu\.be|youtube-nocookie\.com)
+                      /x
+        },
+        {
+          title: "Vimeo",
+          host: "vimeo.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:www\.|player\.)?
+                        (?:vimeo\.com)
+                      /x
+        },
+        {
+          title: "Kickstarter",
+          host: "kickstarter.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:www\.)?
+                        (?:kickstarter\.com)
+                      /x
+        },
+        {
+          title: "Spotify",
+          host: "spotify.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:embed\.spotify\.com)
+                      /x
+        },
+        {
+          title: "SoundCloud",
+          host: "soundcloud.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:w\.soundcloud\.com)
+                      /x
+        },
+        {
+          title: "Video",
+          host: "vzaar.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:view\.vzaar\.com)
+                      /x
+        },
+        {
+          title: "Vine",
+          host: "vine.co",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:vine\.co)
+                      /x
+        },
+        {
+          title: "Chart",
+          host: "infogr.am",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:e\.)?
+                        (?:infogr\.am)
+                      /x
+        },
+        {
+          title: "Flickr",
+          host: "flickr.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:www\.flickr\.com)
+                      /x
+        },
+        {
+          title: "Mpora",
+          host: "mpora.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:mpora\.com)
+                      /x
+        },
+        {
+          title: "TED",
+          host: "ted.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:embed-ssl\.ted\.com)
+                      /x
+        },
+        {
+          title: "Tumblr",
+          host: "tumblr.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:www\.tumblr\.com)
+                      /x
+        },
+        {
+          title: "Video",
+          host: "embedly.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:cdn\.embedly\.com)
+                      /x
+        },
+        {
+          title: "iTunes",
+          host: "itunes.apple.com",
+          host_regex: /^
+                        (?:https?:\/\/|\/\/)
+                        (?:embed\.itunes\.apple\.com)
+                      /x
+        },
       ]
 
-      source_allowed = false
-      allowed_hosts.each do |host|
-        if source =~ host
-          source_allowed = true
-        end
-      end
 
-      return unless source_allowed
+      default_embed_info = {
+        title: "",
+        host: parsed_source.host
+      }
 
-      # Force protocol relative url
-      node['src'] = source.gsub(/^https?:?/, '')
+      embed_info = known_hosts.find { |known_host| !!(source =~ known_host[:host_regex]) } || default_embed_info
 
-      # Strip attributes
-      Sanitize.clean_node!(node, {
-        :elements => %w[iframe],
-        :attributes => {
-          'iframe'  => %w[allowfullscreen frameborder height src width]
-        }
-      })
+      new_node = node.document.create_element "div"
+      new_node["class"] = "iframe-embed"
+      new_node["data-behavior"] = "iframe_embed"
+      new_node["data-embed-title"] = embed_info[:title]
+      new_node["data-embed-host"] = embed_info[:host]
+      new_node["data-embed-source"] = source
 
-      {:node_whitelist => [node]}
+      new_node.inner_html = node["src"]
+      node.replace new_node
+
+      {node_whitelist: [new_node]}
     }
   end
+
+
 
   def class_whitelist
     lambda do |env|
@@ -126,7 +188,7 @@ class Transformers
 
       Sanitize.clean_node!(node, whitelist)
 
-      {:node_whitelist => [node]}
+      {node_whitelist: [node]}
     end
   end
 
