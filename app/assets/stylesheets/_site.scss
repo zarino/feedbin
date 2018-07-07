@@ -1802,6 +1802,31 @@ $saved-search-control-height: 48px;
         border: 1px solid transparent;
         @include border-color($drawer-background-color, $drawer-background-color-night, $drawer-background-color-sunset);
     }
+    .time {
+        padding-right: 18px;
+        position: relative;
+        &:after {
+            position: absolute;
+            right: 0;
+            top: 3px;
+            content: "";
+            display: block;
+            height: 8px;
+            width: 8px;
+            border-radius: 8px;
+            background: $selected;
+        }
+    }
+    &.read .time:after {
+        display: none;
+    }
+    &.starred .time:after {
+        display: block;
+        background: image-url("icon-star-blue.svg") no-repeat;
+        height: 11px;
+        width: 11px;
+        border-radius: 0;
+    }
     .title, &.no-title .feed-title {
         font-size: 14px;
         line-height: 1.2;
@@ -1840,18 +1865,6 @@ $saved-search-control-height: 48px;
     &.starred {
         .icon-star {
             display: block;
-        }
-    }
-    &.read, &.read.no-title {
-        .title,
-        .feed-title,
-        .body {
-            @include color($text-color-light, $text-color-light-night, $text-color-light-sunset);
-        }
-    }
-    &.read.tweet {
-        .feed-title {
-            @include color($text-color-light, $text-color-light-night, $text-color-light-sunset);
         }
     }
     &.media {
