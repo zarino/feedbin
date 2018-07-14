@@ -1565,6 +1565,12 @@ $.extend feedbin,
           feedbin.closeSubcription = false
         return
 
+    subscribeHelp: ->
+      $(document).on 'click', '[data-behavior~=show_help]', (event) ->
+        $("#add_form_modal .modal-dialog").toggleClass("help")
+        $('#add_form_modal .subscribe-help').slideToggle(200)
+        event.preventDefault()
+
     subscribe: ->
       $(document).on 'click', '[data-behavior~=show_subscribe]', ->
         modal = $('#add_form_modal')

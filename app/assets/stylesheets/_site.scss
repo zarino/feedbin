@@ -8255,7 +8255,14 @@ Add
     }
 }
 .done .modal-form {
-    border-radius: $modal-border-radius $modal-border-radius 0 0 !important;
+    button {
+        display: none;
+    }
+}
+.done, .help {
+    .modal-form {
+        border-radius: $modal-border-radius $modal-border-radius 0 0 !important;
+    }
 }
 .available-subscriptions {
     opacity: 0;

@@ -11,6 +11,7 @@
         $('#add_form_modal .modal-dialog').addClass('done');
         $('#add_form_modal [data-behavior~=submit_add]').removeAttr('disabled');
         $('#add_form_modal .title').first().find("input").focus();
+        $('#add_form_modal .subscribe-help').hide()
         window.history.replaceState({}, document.title, "/");
         feedbin.updateFeedSearchMessage();
   <% end %>

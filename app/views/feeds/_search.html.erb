@@ -1,4 +1,6 @@
 <%= form_tag({controller: "feeds", action: "search"}, remote: true, autocomplete: 'off', novalidate: true, class: 'modal-form', data: { behavior: 'feeds_search'}) do %>
     <label for="q">+ Add</label><%= url_field_tag(:q, query, placeholder: 'Feed, Website URL or @twitter handle', class: error.present? ? 'error' : '', autocomplete: "off", autocorrect: "off", autocapitalize: "off", spellcheck: false, data: { behavior: 'feeds_search_field'}) %>
     <span data-behavior="feeds_search_favicon_target" class="favicon-target"></span>
+    <button class="hide"></button>
+    <button class="button-text" data-behavior="show_help">Help?</button>
 <% end %>
