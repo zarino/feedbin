@@ -1,16 +1,18 @@
 <%= form_for(@action, as: :action_params, remote: true) do |f| %>
     <div class="inset">
         <ul class="control-group">
-            <li class="text">
+            <li class="text floating-label">
                 <%= f.text_field :title, placeholder: "Action Name" %>
+                <%= f.label :title, "Action Name", class: "unstyled" %>
             </li>
         </ul>
         <div class="inset-content">
             <h4 class="group-header">Article Matches Search</h4>
         </div>
         <ul class="control-group">
-            <li class="text">
+            <li class="text floating-label">
                 <%= f.search_field :query, placeholder: "Search" %>
+                <%= f.label :query, "Search", class: "unstyled" %>
             </li>
         </ul>
         <% if @user.taggings.any? %>

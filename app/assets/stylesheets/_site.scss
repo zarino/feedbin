@@ -337,6 +337,49 @@ input[type="color"],
     color: $text-color-light;
 }
 
+.floating-label {
+    position: relative;
+    input, label {
+        margin: 0;
+        color: black;
+    }
+    label {
+        padding: 14px 0 0 47px;
+        top: 0;
+        left: 0;
+        position: absolute;
+        z-index: 10;
+        cursor: text;
+        transition: all .1s ease-in-out;
+        color: #666;
+    }
+    input:not(:placeholder-shown) {
+        padding-top: 22px !important;
+        padding-bottom: 6px !important;
+        ~ label {
+            padding-top: 6px;
+            font-size: 12px;
+        }
+    }
+    ::-webkit-input-placeholder {
+        color: transparent;
+    }
+
+    :-moz-placeholder {
+        color: transparent;
+    }
+
+    ::-moz-placeholder {
+        color: transparent;
+    }
+
+    :-ms-input-placeholder {
+        color: transparent;
+    }
+
+}
+
+
 input.processing {
     background-image: image-url("spinner-day.svg");
     background-position: 97% 7px;
@@ -4376,7 +4419,7 @@ body.settings {
         }
     }
     input[name="user[theme]"] + label {
-        padding-left: 50px;
+        padding-left: 50px !important;
         &:before {
             content: "";
             display: block;
@@ -5103,7 +5146,7 @@ input[type="checkbox"]:checked + label .slider-checkbox {
         padding: 0;
         position: relative;
         > {
-            label,
+            label:not(.unstyled),
             button:not(.unstyled),
             textarea,
             a,
@@ -5138,15 +5181,18 @@ input[type="checkbox"]:checked + label .slider-checkbox {
             @media (max-width: 550px) {
                 padding: 0 15px;
             }
-            > input, > textarea {
+            input, textarea {
                 border-width: 1px;
                 border-style: solid;
                 border-radius: 8px;
-                padding: 10px 12px;
+                padding: 14px 16px;
                 &:focus {
                     box-shadow: none;
                     border: 1px solid $selected;
                 }
+            }
+            + .text {
+                margin-top: 10px;
             }
         }
         &.card-number-wrap {
@@ -5162,7 +5208,7 @@ input[type="checkbox"]:checked + label .slider-checkbox {
             padding: 14px 15px;
         }
         &:first-of-type {
-            > label,
+            > label:not(.unstyled),
             > button:not(.unstyled),
             > textarea,
             > a,
