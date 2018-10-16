@@ -20,6 +20,7 @@ class Feed < ApplicationRecord
   after_initialize :default_values
 
   enum feed_type: {xml: 0, newsletter: 1, twitter: 2, twitter_home: 3}
+  enum status: [:ok, :error]
 
   def twitter_user?
     twitter_user.present?

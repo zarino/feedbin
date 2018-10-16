@@ -381,7 +381,8 @@ CREATE TABLE public.feeds (
     self_url text,
     feed_type integer DEFAULT 0,
     active boolean DEFAULT true,
-    options json
+    options json,
+    status integer DEFAULT 0
 );
 
 
@@ -1538,6 +1539,13 @@ CREATE INDEX index_feeds_on_last_published_entry ON public.feeds USING btree (la
 
 
 --
+-- Name: index_feeds_on_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_feeds_on_status ON public.feeds USING btree (status);
+
+
+--
 -- Name: index_import_items_on_import_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2073,6 +2081,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180204093407'),
 ('20180607200816'),
 ('20180714072623'),
-('20180717001048');
+('20180717001048'),
+('20181015225440');
 
 
